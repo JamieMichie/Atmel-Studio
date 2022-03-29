@@ -4,7 +4,7 @@
  * Created: 29/03/2022 13:53:55
  *  Author: SS7U9741
  */ 
-#include <"spi.h">
+#include "spi.h"
 
 uint8_t spi_init(void){
 	/* MOSI = OUTPUT, MISO = OUTPUT, SCK = OUTPUT */
