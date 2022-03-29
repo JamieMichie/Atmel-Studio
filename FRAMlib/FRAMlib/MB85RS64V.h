@@ -9,8 +9,10 @@
 #ifndef MB85RS64V_H_
 #define MB85RS64V_H_
 #include <avr/io.h>
+#include "spi.h"
 
-/* REGISTERS */
+/* CONSTANTS */
+#define FRAM_SIZE 8192
 
 /* OP CODES */
 #define FRAM_WREN  0X06
@@ -23,9 +25,9 @@
 
 /* FUNCTION PROTOTYPES */
 uint8_t fram_init(void);
+uint8_t fram_id(void);
 uint8_t fram_status(void);
-uint32_t fram_readID(void);
 uint8_t fram_readByte(uint16_t address);
-uint8_t fram_writeByte(uint16_t address);
+uint8_t fram_writeByte(uint16_t address, uint8_t udata);
 
 #endif /* MB85RS64V_H_ */
