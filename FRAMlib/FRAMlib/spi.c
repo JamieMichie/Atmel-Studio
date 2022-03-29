@@ -14,9 +14,11 @@ uint8_t spi_init(void){
 }
 
 uint8_t spi_send(uint8_t udata){
+	SPI_PORT &= ~(1 << SPI_CS);
 	SPDR = udata;
 	while(!(SPSR & (1 << SPIF)))
 		;
+	SPI_PORT |= (1 << SPI_CS);
 	return SPDR;
 }
 uint8_t spi_receive(uint8_t udata){

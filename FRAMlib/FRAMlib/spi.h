@@ -11,6 +11,7 @@
 #include <avr/io.h>
 
 #define SPI_DDR  DDRB
+#define SPI_PORT PORTB
 #define SPI_MOSI PORTB0
 #define SPI_SCK  PORTB1
 #define SPI_MISO PORTB2
