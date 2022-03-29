@@ -17,7 +17,7 @@ uint8_t spi_send(uint8_t udata){
 	SPDR = udata;
 	while(!(SPSR & (1 << SPIF)))
 		;
-	return 0;
+	return SPDR;
 }
 uint8_t spi_receive(uint8_t udata){
 	
