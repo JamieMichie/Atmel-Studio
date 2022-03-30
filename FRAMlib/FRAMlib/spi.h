@@ -17,7 +17,7 @@
 #define SPI_MISO PORTB3
 #define SPI_CS   PORTB5
 
-#define SPI_DUMMY 0xFF
+#define SPI_DUMMY 0x00
 
 uint8_t spi_init(void);
 uint8_t spi_send(uint8_t udata);

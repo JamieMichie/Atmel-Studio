@@ -17,13 +17,22 @@ int main(void)
 	spi_init();
 	
 	fram_id();
+	fram_WREN();
 	fram_status();
-	fram_writeByte(0x0001, 0x55);
+	fram_writeByte(0x01ff, 0x45);
+	fram_status();
+	//fram_WRDI();
+	fram_status();
+	fram_readByte(0x01ff);
 	
-	fram_readByte(0x0001);
+	for(uint16_t i = 0; i < FRAM_SIZE;i++){
+		fram_writeByte(i, 0xAA);
+	}
 	
-	uint8_t cmd[] = {0x11, 0x22, 0x33, 0x44, 0x55}; 
-	fram_write(0x0000, cmd, (sizeof(cmd) / sizeof(uint8_t)) );
+	for(uint16_t i = 0; i < FRAM_SIZE;i++){
+		fram_readByte(i);
+	}
+	
     while (1) 
     {
 		

@@ -21,12 +21,6 @@ uint8_t spi_send(uint8_t udata){
 		;
 	return SPDR;
 }
-uint8_t spi_receive(void){
-	SPDR = 0xFF;
-	while(!(SPSR & (1 << SPIF)))
-	;
-	return SPDR;
-}
 
 void spi_CSLOW(void){
 	SPI_PORT &= ~(1 << SPI_CS);

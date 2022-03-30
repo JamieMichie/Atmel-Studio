@@ -54,7 +54,7 @@ uint8_t fram_status(void){
 	
 	spi_CSLOW();
 		retval = spi_send(FRAM_RDSR);
-		retval = spi_send(FRAM_RDSR);
+		retval = spi_send(SPI_DUMMY);
 	spi_CSHIGH();
 	
 	return retval;
@@ -62,35 +62,32 @@ uint8_t fram_status(void){
 
 uint8_t fram_WREN(void){
 	volatile uint8_t retval = 0;
-	
 	spi_CSLOW();
 		retval = spi_send(FRAM_WREN);
-		retval = spi_send(FRAM_RDSR);
-		//TODO: Check if write enabled
 	spi_CSHIGH();
-	
+	spi_CSLOW();
+	return retval;
+}
+
+uint8_t fram_WRDI(void){
+	volatile uint8_t retval = 0;
+	spi_CSLOW();
+	retval = spi_send(FRAM_WRDI);
+	spi_CSHIGH();
 	return retval;
 }
 
 /* NEEDS WORK */
 uint8_t fram_readByte(uint16_t address){
 	uint8_t retval = 0;
-	
-	if(address < (FRAM_SIZE -1)){
 		spi_CSLOW();
 		//spi_send(FRAM_WRDI);
 		spi_send(FRAM_READ);
 		//Address is 16bits long
-		spi_send((address << 8));
+		spi_send((address >> 8));
 		spi_send(address);
 		retval = spi_send(SPI_DUMMY);
-		retval = spi_send(SPI_DUMMY);
 		spi_CSHIGH();
-		
-		return retval;
-	}else{
-		return 1;
-	}
 	
 }
 
@@ -98,56 +95,29 @@ uint8_t fram_readByte(uint16_t address){
 uint8_t fram_writeByte(uint16_t address, uint8_t udata)
 {
 	uint8_t retval = 0;
-	
-	if(address < (FRAM_SIZE -1)){
-		spi_CSLOW();
+	spi_CSLOW();
 		retval = fram_WREN();
-
-		if(retval & 0x02){
 			spi_send(FRAM_WRITE);
-			spi_send((address << 8));
+			spi_send((address >> 8));
 			spi_send(address);
 			spi_send(udata);
-			}else{
-			return 1;
-		}
-		
-		spi_CSHIGH();
-		
-		return 0;
-	}else{
-		return 1;
-	}
-	
+	spi_CSHIGH();		
 }
 
 /**/
 uint8_t fram_write(uint16_t address, uint8_t *udata, uint8_t nbytes){
 	uint8_t retval = 0;
-	
-	if(address < (FRAM_SIZE -1)){
 		spi_CSLOW();
-		
 		retval = fram_WREN();
-		if(retval & 0x02){
+		spi_send(FRAM_WRITE);
+		spi_send((address << 8));
+		spi_send(address);
 			
-			spi_send(FRAM_WRITE);
-			spi_send((address << 8));
-			spi_send(address);
-			
-			for(uint8_t i = 0; i < (nbytes - 1); i++){
-				spi_send(udata[i]);
-			}
-			
-			}else{
-			return 1;
+		for(uint8_t i = 0; i < (nbytes - 1); i++){
+			spi_CSLOW();
+			spi_send(udata[i]);
 		}
-		
-		spi_CSHIGH();
-		
-		return 0;
-	}else{
-		return 1;
-	}
+			
+		//spi_CSHIGH();
 	
 }
