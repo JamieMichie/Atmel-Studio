@@ -27,7 +27,9 @@
 uint8_t fram_init(void);
 uint8_t fram_id(void);
 uint8_t fram_status(void);
+uint8_t fram_WREN(void);
 uint8_t fram_readByte(uint16_t address);
 uint8_t fram_writeByte(uint16_t address, uint8_t udata);
+uint8_t fram_write(uint16_t address, uint8_t *udata, uint8_t nbytes);
 
 #endif /* MB85RS64V_H_ */
