@@ -75,7 +75,9 @@ uint8_t fram_WREN(void){
 /* NEEDS WORK */
 uint8_t fram_readByte(uint16_t address){
 	uint8_t retval = 0;
-	spi_CSLOW();
+	
+	if(address < (FRAM_SIZE -1)){
+		spi_CSLOW();
 		//spi_send(FRAM_WRDI);
 		spi_send(FRAM_READ);
 		//Address is 16bits long
@@ -83,9 +85,13 @@ uint8_t fram_readByte(uint16_t address){
 		spi_send(address);
 		retval = spi_send(SPI_DUMMY);
 		retval = spi_send(SPI_DUMMY);
-	spi_CSHIGH();
+		spi_CSHIGH();
+		
+		return retval;
+	}else{
+		return 1;
+	}
 	
-	return retval;
 }
 
 /* NEEDS WORK */
@@ -93,7 +99,8 @@ uint8_t fram_writeByte(uint16_t address, uint8_t udata)
 {
 	uint8_t retval = 0;
 	
-	spi_CSLOW();
+	if(address < (FRAM_SIZE -1)){
+		spi_CSLOW();
 		retval = fram_WREN();
 
 		if(retval & 0x02){
@@ -101,21 +108,26 @@ uint8_t fram_writeByte(uint16_t address, uint8_t udata)
 			spi_send((address << 8));
 			spi_send(address);
 			spi_send(udata);
-		}else{
+			}else{
 			return 1;
 		}
 		
-	spi_CSHIGH(); 
+		spi_CSHIGH();
+		
+		return 0;
+	}else{
+		return 1;
+	}
 	
-	return 0;
 }
 
 /**/
 uint8_t fram_write(uint16_t address, uint8_t *udata, uint8_t nbytes){
 	uint8_t retval = 0;
 	
-	spi_CSLOW();
-	
+	if(address < (FRAM_SIZE -1)){
+		spi_CSLOW();
+		
 		retval = fram_WREN();
 		if(retval & 0x02){
 			
@@ -125,13 +137,17 @@ uint8_t fram_write(uint16_t address, uint8_t *udata, uint8_t nbytes){
 			
 			for(uint8_t i = 0; i < (nbytes - 1); i++){
 				spi_send(udata[i]);
-				}
-				
-			}else{
-				return 1;
 			}
+			
+			}else{
+			return 1;
+		}
 		
-	spi_CSHIGH();
+		spi_CSHIGH();
+		
+		return 0;
+	}else{
+		return 1;
+	}
 	
-	return 0;
 }
