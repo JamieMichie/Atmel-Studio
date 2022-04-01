@@ -22,6 +22,7 @@ uint8_t fram_init(void){
 * @param
 * @param Returns 0 for success
 * @param Returns 1 for failure 
+* Function OK
  */
 uint8_t fram_id(void){
 	volatile uint8_t retval;
@@ -48,6 +49,7 @@ uint8_t fram_id(void){
 }
 /* Fram Status Function
 Returns value from the Status register
+Function ok - WORKS
 */
 uint8_t fram_status(void){
 	volatile uint8_t retval = 0;
@@ -77,7 +79,9 @@ uint8_t fram_WRDI(void){
 	return retval;
 }
 
-/* NEEDS WORK */
+/* WORKING 
+ * TODO : Add validation checks
+ */
 uint8_t fram_readByte(uint16_t address){
 	uint8_t retval = 0;
 		spi_CSLOW();
@@ -91,7 +95,9 @@ uint8_t fram_readByte(uint16_t address){
 	
 }
 
-/* NEEDS WORK */
+/* WORKING
+ * TODO : Add validation checks
+ */
 uint8_t fram_writeByte(uint16_t address, uint8_t udata)
 {
 	uint8_t retval = 0;
@@ -104,13 +110,16 @@ uint8_t fram_writeByte(uint16_t address, uint8_t udata)
 	spi_CSHIGH();		
 }
 
-/**/
+/*
+	Needs Work
+	TODO: Test/FIX
+*/
 uint8_t fram_write(uint16_t address, uint8_t *udata, uint8_t nbytes){
 	uint8_t retval = 0;
 		spi_CSLOW();
 		retval = fram_WREN();
 		spi_send(FRAM_WRITE);
-		spi_send((address << 8));
+		spi_send((address >> 8));
 		spi_send(address);
 			
 		for(uint8_t i = 0; i < (nbytes - 1); i++){
@@ -119,5 +128,9 @@ uint8_t fram_write(uint16_t address, uint8_t *udata, uint8_t nbytes){
 		}
 			
 		//spi_CSHIGH();
+	
+}
+
+uint8_t fram_eraseAll(void){
 	
 }

@@ -32,4 +32,5 @@ uint8_t fram_readByte(uint16_t address);
 uint8_t fram_writeByte(uint16_t address, uint8_t udata);
 uint8_t fram_write(uint16_t address, uint8_t *udata, uint8_t nbytes);
 uint8_t fram_WRDI(void);
+uint8_t fram_eraseAll(void);
 #endif /* MB85RS64V_H_ */
